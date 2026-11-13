@@ -1,3 +1,4 @@
+
 import json
 
 json_data = '''
@@ -18,11 +19,13 @@ def rank_projects(projects):
         reverse=True
     )
 
+
 def recommend_project(project):
     if project["stars"] >= 1000 and project["safety_score"] >= 80:
         return "Recommended"
     else:
         return "Not Recommended"
+
 
 def analyze_projects(projects):
     print("AI AIRDROP HUNTER AGENT")
@@ -34,19 +37,8 @@ def analyze_projects(projects):
         name = project["name"]
         stars = project["stars"]
         score = project["safety_score"]
-        recommendation = recommend_project(project)
 
-         
-        if project["stars"] >= 20000:
-    priority = "High"
-else:
-    priority = "Normal"
-
-        print("Project:", project["name"])
-        print("Stars:", project["stars"])
-        print("Priority:", priority)
-        print("----------------")
-        if stars >= 1000:
+        if stars >= 20000:
             priority = "High"
         else:
             priority = "Normal"
@@ -55,6 +47,8 @@ else:
             safety = "Safe Indicator"
         else:
             safety = "Low Indicator"
+
+        recommendation = recommend_project(project)
 
         print("Project:", name)
         print("Stars:", stars)
@@ -66,4 +60,5 @@ else:
 
 
 analyze_projects(projects)
+
 
