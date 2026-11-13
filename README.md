@@ -1,48 +1,22 @@
+AI Airdrop Hunter Agent
 
-projects = [
-    {
-        "name": "Alpha",
-        "stars": 1200,
-        "safety_score": 85
-    },
-    {
-        "name": "Beta",
-        "stars": 850,
-        "safety_score": 60
-    },
-    {
-        "name": "Gamma",
-        "stars": 2500,
-        "safety_score": 90
-    }
-]
+An educational Python project designed to analyze Web3 and airdrop projects using basic indicators.
 
+Features
 
-def analyze_projects(projects):
-    print("AI AIRDROP HUNTER AGENT")
-    print("=======================")
+- Analyze project names
+- Check GitHub stars
+- Assign project priority
+- Display educational safety indicators
 
-    for project in projects:
-        name = project["name"]
-        stars = project["stars"]
-        score = project["safety_score"]
+Technologies
 
-        if stars >= 1000:
-            priority = "High"
-        else:
-            priority = "Normal"
+- Python
+- GitHub
+- AI and Web3 Research
 
-        if score >= 80:
-            safety = "Safe Indicator"
-        else:
-            safety = "Low Indicator"
+Project Status
 
-        print("Project:", name)
-        print("Stars:", stars)
-        print("Priority:", priority)
-        print("Safety Score:", score)
-        print("Safety:", safety)
-        print("-----------------------")
+Beginner learning project — currently under development.
 
-
-analyze_projects(projects)
+Note: Safety scores are educational indicators only. They do not guarantee that a project is safe or legitimate.
