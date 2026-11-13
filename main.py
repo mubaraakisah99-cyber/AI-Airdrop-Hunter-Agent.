@@ -5,7 +5,7 @@ json_data = '''
 [
     {"name": "Alpha", "stars": 1200, "safety_score": 85},
     {"name": "Beta", "stars": 850, "safety_score": 60},
-    {"name": "Gamma", "stars": 2500, "safety_score": 90}
+    {"name": "Gamma", "stars": 25000, "safety_score": 90}
 ]
 '''
 
@@ -30,6 +30,8 @@ def recommend_project(project):
 def analyze_projects(projects):
     print("AI AIRDROP HUNTER AGENT")
     print("=======================")
+    print("Total Projects:", len(projects))
+    print("-----------------------")
 
     ranked_projects = rank_projects(projects)
 
@@ -60,5 +62,3 @@ def analyze_projects(projects):
 
 
 analyze_projects(projects)
-
-
