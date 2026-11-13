@@ -25,6 +25,11 @@ def rank_projects(projects):
         reverse=True
     )
 
+def recommend_project(project):
+    if project["stars"] >= 1000 and project["safety_score"] >= 80:
+        return "Recommended"
+    else:
+        return "Not Recommended"
 
 def analyze_projects(projects):
     print("AI AIRDROP HUNTER AGENT")
