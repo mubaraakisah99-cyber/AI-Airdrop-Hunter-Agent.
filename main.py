@@ -36,6 +36,16 @@ def analyze_projects(projects):
         score = project["safety_score"]
         recommendation = recommend_project(project)
 
+         
+        if project["stars"] >= 20000:
+    priority = "High"
+else:
+    priority = "Normal"
+
+        print("Project:", project["name"])
+        print("Stars:", project["stars"])
+        print("Priority:", priority)
+        print("----------------")
         if stars >= 1000:
             priority = "High"
         else:
