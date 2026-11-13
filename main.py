@@ -17,12 +17,20 @@ projects = [
     }
 ]
 
+def rank_projects(projects):
+    return sorted(
+        projects,
+        key=lambda project: project["stars"],
+        reverse=True
+    )
 
 def analyze_projects(projects):
     print("AI AIRDROP HUNTER AGENT")
     print("=======================")
 
-    for project in projects:
+    ranked_projects = rank_projects(projects)
+
+for project in ranked_projects:
         name = project["name"]
         stars = project["stars"]
         score = project["safety_score"]
