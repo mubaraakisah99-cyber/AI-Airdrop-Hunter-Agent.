@@ -5,21 +5,25 @@ json_data = '''
 [
     {"name": "Alpha", "stars": 1200, "safety_score": 85},
     {"name": "Beta", "stars": 850, "safety_score": 60},
-    {"name": "Gamma", "stars": 25000, "safety_score": 90}
-    {"name": "Delta", "stars": 5000, "safety_score": 95}
+    {"name": "Gamma", "stars": 25000, "safety_score": 90},
+{"name": "Delta", "stars": 5000, "safety_score": 95}
 ]
 '''
 
 projects = json.loads(json_data)
 
 
+
 def rank_projects(projects):
     return sorted(
         projects,
         key=lambda project: (
-    project["safety_score"],
-    project["stars"]
-),
+            project["safety_score"],
+            project["stars"]
+        ),
+        reverse=True
+    )
+
     
 
 
