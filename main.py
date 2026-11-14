@@ -1,98 +1,103 @@
 
 import json
-import urllib.request
-import urllib.error
-import socket
 
-# 1. Fallback data idan API bai yi aiki ba
-fallback_projects = [
-    {"name": "Alpha", "stars": 1200,
-     "safety_score": 85},
-    {"name": "Beta", "stars": 850,
-     "safety_score": 60},
-    {"name": "Gamma", "stars": 25000,
-     "safety_score": 90}
+# 1. PROJECT DATA
+projects = [
+    {
+        "name": "Alpha",
+        "stars": 1200,
+        "safety_score": 85,
+        "official_website": True,
+        "official_x": True,
+        "documentation": True,
+        "security_review": False
+    },
+    {
+        "name": "Beta",
+        "stars": 850,
+        "safety_score": 60,
+        "official_website": False,
+        "official_x": True,
+        "documentation": False,
+        "security_review": False
+    },
+    {
+        "name": "Gamma",
+        "stars": 25000,
+        "safety_score": 90,
+        "official_website": True,
+        "official_x": True,
+        "documentation": True,
+        "security_review": True
+    },
+    {
+        "name": "Delta",
+        "stars": 5000,
+        "safety_score": 95,
+        "official_website": True,
+        "official_x": False,
+        "documentation": True,
+        "security_review": False
+    }
 ]
 
 
-# 2. Samo projects daga API
-def discover_projects():
-    url = (
-        "https://api.github.com/search/repositories"
-        "?q=airdrop&sort=stars&order=desc&per_page=5"
-    )
-
-    try:
-        request = urllib.request.Request(
-            url,
-            headers={"User-Agent": "AirdropHunter"}
-        )
-
-        with urllib.request.urlopen(
-            request, timeout=15
-        ) as response:
-            data = json.loads(
-                response.read().decode("utf-8")
-            )
-
-        projects = []
-
-        for item in data["items"]:
-            projects.append({
-                "name": item["full_name"],
-                "stars": item["stargazers_count"],
-                "safety_score": None
-            })
-
-        print("API Discovery Successful!")
-        return projects
-
-    except (
-        urllib.error.HTTPError,
-        urllib.error.URLError,
-        json.JSONDecodeError,
-        socket.timeout,
-        KeyError
-    ) as error:
-
-        print("API Error:", error)
-        print("Using fallback data...")
-
-        return fallback_projects
-
-
-# 3. Rank projects
+# 2. PROJECT RANKING
 def rank_projects(projects):
     return sorted(
         projects,
-        key=lambda project: (
-            project["safety_score"]
-            if project["safety_score"] is not None
-            else -1,
-            project["stars"]
+        key=lambda p: (
+            p["safety_score"],
+            p["stars"]
         ),
         reverse=True
     )
 
 
-# 4. Recommendation
+# 3. PROJECT VERIFICATION
+def verify_project(project):
+
+    score = 0
+
+    checks = [
+        "official_website",
+        "official_x",
+        "documentation",
+        "security_review"
+    ]
+
+    for check in checks:
+        if project.get(check) is True:
+            score += 25
+
+    if score >= 75:
+        status = "More Evidence Available"
+    elif score >= 50:
+        status = "Needs More Review"
+    else:
+        status = "Insufficient Evidence"
+
+    return score, status
+
+
+# 4. RECOMMENDATION
 def recommend_project(project):
+
     score = project["safety_score"]
+    evidence, status = verify_project(project)
 
-    if score is not None and (
-        project["stars"] >= 1000
-        and score >= 80
-    ):
-        return "Recommended for further review"
+    if score >= 80 and evidence >= 75:
+        return "Recommended for Further Review"
 
-    return "Not Verified - Review Required"
+    return "Not Recommended Yet"
 
 
-# 5. Analyze projects
+# 5. MAIN ANALYSIS
 def analyze_projects(projects):
 
-    print("\nAI AIRDROP HUNTER AGENT")
+    print("AI AIRDROP HUNTER AGENT")
     print("=======================")
+
     print("Total Projects:", len(projects))
     print("-----------------------")
 
@@ -100,32 +105,19 @@ def analyze_projects(projects):
 
     for project in ranked:
 
+        evidence, status = verify_project(project)
+
         print("Project:", project["name"])
         print("Stars:", project["stars"])
-
-        if project["stars"] >= 20000:
-            print("Priority: High")
-        else:
-            print("Priority: Normal")
-
-        score = project["safety_score"]
-
-        if score is None:
-            print("Safety Score: Not Verified")
-            print("Safety: Unknown")
-        elif score >= 80:
-            print("Safety: Passed Screening")
-        else:
-            print("Safety: Needs Review")
-
+        print("Safety Score:", project["safety_score"])
+        print("Evidence Score:", evidence)
+        print("Verification:", status)
         print(
             "Recommendation:",
             recommend_project(project)
         )
-
         print("-----------------------")
 
 
-# 6. Start Agent
-projects = discover_projects()
+# 6. START AGENT
 analyze_projects(projects)
