@@ -450,12 +450,9 @@ def analyze_projects(projects):
 
 # 15. START AGENT
 
-projects = discover_projects()
-
-analyze_projects(projects)
-
-show_ranking(projects)
-
-read_report()
-
-show_dashboard(projects)
+if __name__ == "__main__":
+    projects = discover_projects()
+    analyze_projects(projects)
+    show_ranking(projects)
+    read_report()
+    show_dashboard(projects)
