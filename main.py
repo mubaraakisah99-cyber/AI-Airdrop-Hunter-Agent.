@@ -1,5 +1,7 @@
 
 import json
+import urllib.request
+import urllib.error
 
 # 1. PROJECT DATA
 projects = [
@@ -41,8 +43,57 @@ projects = [
     }
 ]
 
+# 2. DISCOVER PROJECTS
+def discover_projects():
 
-# 2. VERIFY PROJECT
+    url = (
+        "https://api.github.com/search/repositories"
+        "?q=airdrop+blockchain"
+        "&sort=stars&order=desc&per_page=10"
+    )
+
+    request = urllib.request.Request(
+        url,
+        headers={"User-Agent": "Airdrop-Hunter"}
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=12) as response:
+            data = json.loads(response.read().decode("utf-8"))
+
+        new_projects = []
+
+        for item in data.get("items", []):
+
+            new_projects.append({
+                "name": item.get("full_name", "Unknown"),
+                "stars": item.get("stargazers_count", 0),
+                "safety_score": 0,
+                "official_website": False,
+                "official_x": False,
+                "documentation": False,
+                "security_review": False
+            })
+
+        if not new_projects:
+            raise ValueError("No projects found")
+
+        print("API Discovery Successful!")
+        return new_projects
+
+    except (urllib.error.URLError,
+            urllib.error.HTTPError,
+            TimeoutError,
+            json.JSONDecodeError,
+            ValueError) as error:
+
+        print("API Error:", error)
+        print("Using existing sample projects...")
+        return projects
+
+
+
+# 3. VERIFY PROJECT
 def verify_project(project):
     score = 0
 
@@ -67,7 +118,7 @@ def verify_project(project):
     return score, status
 
 
-# 3. RECOMMENDATION
+# 4. RECOMMENDATION
 def recommend_project(project):
     score = project["safety_score"]
     evidence, status = verify_project(project)
@@ -78,7 +129,7 @@ def recommend_project(project):
     return "Not Recommended Yet"
 
 
-# 4. DETECT RISK
+# 5. DETECT RISK
 def detect_risk(project):
     risks = []
 
@@ -97,7 +148,7 @@ def detect_risk(project):
     return risks
 
 
-# 5. RISK LEVEL
+# 6. RISK LEVEL
 def get_risk_level(project):
     risks = detect_risk(project)
 
@@ -109,7 +160,7 @@ def get_risk_level(project):
         return "Low Risk"
 
 
-# 6. FINAL REPORT
+# 7. FINAL REPORT
 def generate_report(project):
     evidence, status = verify_project(project)
     risks = detect_risk(project)
@@ -124,7 +175,7 @@ def generate_report(project):
     print("=================================")
 
 
-# 7. SAVE REPORT
+# 8. SAVE REPORT
 def save_report(projects):
     reports = []
 
@@ -146,7 +197,7 @@ def save_report(projects):
     print("\nReports saved successfully!")
 
 
-# 8. READ REPORT
+# 9. READ REPORT
 def read_report():
     with open("/tmp/airdrop_report.json", "r") as file:
         data = json.load(file)
@@ -161,7 +212,7 @@ def read_report():
         print("----------------")
 
 
-# 9. DASHBOARD
+# 10. DASHBOARD
 def show_dashboard(projects):
     low_risk = 0
     medium_risk = 0
@@ -190,7 +241,7 @@ def show_dashboard(projects):
     print("Recommended:", recommended)
 
 
-# 10. PROJECT RANKING
+# 11. PROJECT RANKING
 def rank_projects(projects):
     return sorted(
         projects,
@@ -218,7 +269,7 @@ def show_ranking(projects):
         print("\nTOP PROJECT:", ranked[0]["name"])
 
 
-# 11. MAIN ANALYSIS
+# 12. MAIN ANALYSIS
 def analyze_projects(projects):
     print("AI AIRDROP HUNTER AGENT")
     print("=======================")
@@ -243,7 +294,10 @@ def analyze_projects(projects):
     save_report(projects)
 
 
-# 12. START AGENT
+# 13. START AGENT
+
+projects = discover_projects()
+
 analyze_projects(projects)
 show_ranking(projects)
 read_report()
