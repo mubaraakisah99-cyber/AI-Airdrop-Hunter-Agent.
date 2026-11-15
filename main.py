@@ -2,6 +2,7 @@
 import json
 import urllib.request
 import urllib.error
+import urllib.parse
 
 # 1. PROJECT DATA
 projects = [
@@ -10,6 +11,7 @@ projects = [
         "stars": 1200,
         "safety_score": 85,
         "official_website": True,
+        "website_url": "https://example.com",
         "official_x": True,
         "documentation": True,
         "security_review": False
@@ -19,6 +21,7 @@ projects = [
         "stars": 850,
         "safety_score": 60,
         "official_website": False,
+        "website_url": "https://example.com",
         "official_x": True,
         "documentation": False,
         "security_review": False
@@ -28,6 +31,7 @@ projects = [
         "stars": 25000,
         "safety_score": 90,
         "official_website": True,
+        "website_url": "https://example.com",
         "official_x": True,
         "documentation": True,
         "security_review": True
@@ -37,6 +41,7 @@ projects = [
         "stars": 5000,
         "safety_score": 95,
         "official_website": True,
+        "website_url": "https://example.com",
         "official_x": False,
         "documentation": True,
         "security_review": False
@@ -118,6 +123,31 @@ def verify_project(project):
     return score, status
 
 
+  
+# EVIDENCE VERIFICATION
+
+def show_evidence_details(project):
+
+    checks = {
+        "Official Website": "official_website",
+        "Official X": "official_x",
+        "Documentation": "documentation",
+        "Security Review": "security_review"
+    }
+
+    print("\nEVIDENCE VERIFICATION")
+    print("---------------------")
+
+    for name, key in checks.items():
+
+        if project.get(key) is True:
+            print(name + ": Evidence marked available")
+        else:
+            print(name + ": Needs Verification")
+
+
+
+
 # 4. RECOMMENDATION
 def recommend_project(project):
     score = project["safety_score"]
@@ -160,6 +190,44 @@ def get_risk_level(project):
         return "Low Risk"
 
 
+      
+#  WEBSITE CHECKER 
+
+def check_website(project):
+
+    url = project.get("website_url", "")
+
+    if not url:
+        return "No Website URL Provided"
+
+    parsed = urllib.parse.urlparse(url)
+
+    if parsed.scheme != "https" or not parsed.netloc:
+        return "Invalid Website URL"
+
+    request = urllib.request.Request(
+        url,
+        headers={"User-Agent": "Airdrop-Hunter"}
+    )
+
+    try:
+        with urllib.request.urlopen(
+            request, timeout=10
+        ) as response:
+
+            return "Website Responding"
+
+    except urllib.error.HTTPError as error:
+        return "HTTP Error: " + str(error.code)
+
+    except urllib.error.URLError:
+        return "Network Unavailable - Cannot Verify"
+
+    except TimeoutError:
+        return "Connection Timeout - Cannot Verify"
+
+
+
 # 7. FINAL REPORT
 def generate_report(project):
     evidence, status = verify_project(project)
@@ -169,6 +237,13 @@ def generate_report(project):
     print("Project:", project["name"])
     print("Evidence Score:", evidence)
     print("Verification:", status)
+    print(
+    "Website Status:",
+    check_website(project)
+    )
+
+    show_evidence_details(project)
+
     print("Risk Alerts:", risks)
     print("Risk Level:", get_risk_level(project))
     print("Recommendation:", recommend_project(project))
@@ -302,4 +377,3 @@ analyze_projects(projects)
 show_ranking(projects)
 read_report()
 show_dashboard(projects)
-
