@@ -67,14 +67,17 @@ def home():
         score, _ = agent.verify_project(project)
         gaps = agent.detect_risk(project)
         rows.append({
-            "name": project.get("name", "Unknown"),
-            "stars": project.get("stars", 0),
-            "score": score,
-            "gaps": gaps,
-            "gap_count": len(gaps),
-            "gap_level": agent.get_risk_level(project),
-            "recommendation": agent.recommend_project(project),
-        })
+    "name": project.get("name", "Unknown"),
+    "stars": project.get("stars", 0),
+    "score": score,
+    "gaps": gaps,
+    "gap_count": len(gaps),
+    "unverified_evidence": agent.get_unverified_evidence(project),
+    "unverified_count": len(agent.get_unverified_evidence(project)),
+    "gap_level": agent.get_risk_level(project),
+    "recommendation": agent.recommend_project(project),
+})
+            
     return render_template_string(
         PAGE,
         projects=rows,
