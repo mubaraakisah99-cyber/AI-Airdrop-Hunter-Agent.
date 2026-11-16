@@ -83,11 +83,11 @@ def discover_projects():
                 "name": item.get("full_name", "Unknown"),
                 "stars": item.get("stargazers_count", 0),
                 "safety_score": 0,
-                "official_website": False,
+                "official_website": None,
                 "website_url": item.get("homepage") or "",
-                "official_x": False,
-                "documentation": False,
-                "security_review": False
+                "official_x": None,
+                "documentation": None,
+                "security_review": None
             })
 
         if not new_projects:
@@ -175,6 +175,7 @@ def recommend_project(project):
 
 # 6. DETECT EVIDENCE GAPS
 
+
 def detect_risk(project):
 
     risks = []
@@ -188,10 +189,27 @@ def detect_risk(project):
 
     for key, message in checks.items():
 
-        if project.get(key) is not True:
+        if project.get(key) is False:
             risks.append(message)
 
     return risks
+
+
+def get_unverified_evidence(project):
+
+    checks = {
+        "official_website": "Official Website",
+        "official_x": "Official X",
+        "documentation": "Documentation",
+        "security_review": "Security Review"
+    }
+
+    return [
+        label
+        for key, label in checks.items()
+        if project.get(key) is None
+    ]
+
 
 
 # 7. EVIDENCE GAP LEVEL
