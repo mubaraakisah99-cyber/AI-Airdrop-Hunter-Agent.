@@ -177,7 +177,6 @@ def recommend_project(project):
 
 
 def detect_risk(project):
-
     risks = []
 
     checks = {
@@ -188,7 +187,6 @@ def detect_risk(project):
     }
 
     for key, message in checks.items():
-
         if project.get(key) is False:
             risks.append(message)
 
